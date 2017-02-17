@@ -12,7 +12,7 @@
     tools:context=".MainActivity">
 
     <Button
-        android:text="View Gallery"
+        android:text="Choose from Gallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/capture_image"
@@ -20,7 +20,8 @@
         android:layout_marginTop="21dp"
         android:id="@+id/view_gallery"
         style="@android:style/Widget.Holo.Light.Button"
-        android:fontFamily="sans-serif-medium" />
+        android:fontFamily="sans-serif-medium"
+        android:onClick="galleryIntent" />
 
     <Button
         android:text="Capture Image"
@@ -31,17 +32,6 @@
         android:layout_alignParentTop="true"
         android:fontFamily="sans-serif-medium"
         style="@android:style/Widget.Holo.Light.Button" />
-
-    <Button
-        android:text="Exit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
-        android:id="@+id/exit"
-        android:layout_below="@+id/view_gallery"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:fontFamily="monospace" />
 
     <Button
         android:text="Capture Image"
