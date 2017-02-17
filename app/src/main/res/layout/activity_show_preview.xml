@@ -17,15 +17,16 @@
         android:id="@+id/capturePhotoImageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/button" />
+        android:layout_above="@+id/uploadBtn" />
 
     <Button
         android:text="Upload"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
+        android:id="@+id/uploadBtn"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content" />
+        android:layout_width="wrap_content"
+        android:onClick="uploadFunc" />
 
 
 </RelativeLayout>
