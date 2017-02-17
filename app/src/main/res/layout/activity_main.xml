@@ -51,6 +51,7 @@
         android:id="@+id/capture_image"
         android:layout_alignParentTop="true"
         android:fontFamily="sans-serif-medium"
-        style="@android:style/Widget.Holo.Light.Button" />
+        style="@android:style/Widget.Holo.Light.Button"
+        android:onClick="takePhoto" />
 
 </RelativeLayout>
