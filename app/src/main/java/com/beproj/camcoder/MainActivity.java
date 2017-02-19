@@ -2,6 +2,7 @@ package com.beproj.camcoder;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -76,15 +78,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
             Intent open_displayPage = new Intent(this,showPreview.class);
-            open_displayPage.putExtra("imageUri",photoFileUri.toString());
+
+            open_displayPage.putExtra("code",0);
+            open_displayPage.putExtra("imagePath",photoFileUri.getPath());
+
             startActivity(open_displayPage);
         }
         else if(requestCode == SELECT_FILE && resultCode == RESULT_OK){
-            Uri fileuri = data.getData();
-            Intent open_displayPage = new Intent(this,showPreview.class);
-            open_displayPage.putExtra("imageUri",fileuri.toString());
-            startActivity(open_displayPage);
+            galleryResult(data);
         }
+    }
+
+    public void galleryResult(Intent data){
+        Bitmap bm = null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Intent open_displayPage = new Intent(this,showPreview.class);
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+
+        open_displayPage.putExtra("code",1);
+        open_displayPage.putExtra("byteArray", bs.toByteArray());
+
+        startActivity(open_displayPage);
     }
 
     @Override

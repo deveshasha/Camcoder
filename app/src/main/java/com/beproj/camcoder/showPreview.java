@@ -2,16 +2,12 @@ package com.beproj.camcoder;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -22,16 +18,16 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class showPreview extends Activity {
-    //private static final String TAG = "value";
+
     private ImageView mPhotoCapturedImageView;
     private String image_name="";
-    private Bitmap bitmap;
     private String encoded_string;
+    private int code;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +36,38 @@ public class showPreview extends Activity {
         setContentView(R.layout.activity_show_preview);
 
         mPhotoCapturedImageView = (ImageView) findViewById(R.id.capturePhotoImageView);
+        code = getIntent().getIntExtra("code", -1);
 
-        Uri imageUri = Uri.parse(getIntent().getStringExtra("imageUri"));
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(code == 0){
+            String path = getIntent().getStringExtra("imagePath");
+            showReducedSize(path);
         }
-        mPhotoCapturedImageView.setImageBitmap(bitmap);
+        else if(code == 1){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(
+                    getIntent().getByteArrayExtra("byteArray"), 0, getIntent()
+                            .getByteArrayExtra("byteArray").length);
+            mPhotoCapturedImageView.setImageBitmap(bitmap);
+
+        }
+    }
+
+    public void showReducedSize(String path) {
+        int targetImageViewWidth = 420; //mPhotoCapturedImageView.getWidth();
+        int targetImageViewHeight = 420; //mPhotoCapturedImageView.getHeight();
+
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, bmOptions);
+        int cameraImageWidth = bmOptions.outWidth;
+        int cameraImageHeight = bmOptions.outHeight;
+
+        int scaleFactor = Math.min(cameraImageWidth / targetImageViewWidth, cameraImageHeight / targetImageViewHeight);
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inJustDecodeBounds = false;
+
+        Bitmap photoReducedSizeBitmp = BitmapFactory.decodeFile(path, bmOptions);
+        mPhotoCapturedImageView.setImageBitmap(photoReducedSizeBitmp);
+
     }
 
     public void uploadFunc(View view) {
@@ -66,10 +86,10 @@ public class showPreview extends Activity {
             return null;
         }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                makeRequest();
-            }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            makeRequest();
+        }
     }
 
     private void makeRequest() {
