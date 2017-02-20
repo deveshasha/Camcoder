@@ -3,6 +3,7 @@ package com.beproj.camcoder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -63,16 +64,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void galleryIntent(View view)    {
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
 
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        startActivityForResult(chooserIntent, SELECT_FILE);
     }
 
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
@@ -80,33 +76,18 @@ public class MainActivity extends AppCompatActivity {
             Intent open_displayPage = new Intent(this,showPreview.class);
 
             open_displayPage.putExtra("code",0);
-            open_displayPage.putExtra("imagePath",photoFileUri.getPath());
+            open_displayPage.putExtra("imagePath",photoFileUri.toString());
 
             startActivity(open_displayPage);
         }
         else if(requestCode == SELECT_FILE && resultCode == RESULT_OK){
-            galleryResult(data);
+            Intent open_displayPage = new Intent(this,showPreview.class);
+
+            open_displayPage.putExtra("code",1);
+            open_displayPage.putExtra("imagePath", data.getData().toString());
+
+            startActivity(open_displayPage);
         }
-    }
-
-    public void galleryResult(Intent data){
-        Bitmap bm = null;
-        if (data != null) {
-            try {
-                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Intent open_displayPage = new Intent(this,showPreview.class);
-        ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-
-        open_displayPage.putExtra("code",1);
-        open_displayPage.putExtra("byteArray", bs.toByteArray());
-
-        startActivity(open_displayPage);
     }
 
     @Override

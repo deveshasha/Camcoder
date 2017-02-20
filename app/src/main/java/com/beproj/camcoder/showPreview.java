@@ -2,6 +2,7 @@ package com.beproj.camcoder;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -39,14 +40,14 @@ public class showPreview extends Activity {
         code = getIntent().getIntExtra("code", -1);
 
         if(code == 0){
-            String path = getIntent().getStringExtra("imagePath");
+            Uri imageuri = Uri.parse(getIntent().getStringExtra("imagePath"));
+            String path = imageuri.getPath();
             showReducedSize(path);
         }
         else if(code == 1){
-            Bitmap bitmap = BitmapFactory.decodeByteArray(
-                    getIntent().getByteArrayExtra("byteArray"), 0, getIntent()
-                            .getByteArrayExtra("byteArray").length);
-            mPhotoCapturedImageView.setImageBitmap(bitmap);
+            Uri imageuri = Uri.parse(getIntent().getStringExtra("imagePath"));
+            String imagepath = imageuri.getPath();
+            showReducedSize(imagepath);
 
         }
     }
