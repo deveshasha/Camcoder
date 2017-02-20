@@ -59,13 +59,6 @@ public class showPreview extends Activity {
         imageuri = Uri.parse(getIntent().getStringExtra("imagePath"));
         image_name = getfilename(imageuri);
         String path = imageuri.getPath();
-       /* if(code == 0){
-            showReducedSize(path);
-        }
-        else if(code == 1){
-            showReducedSize(imagepath);
-
-        }*/
         showReducedSize(path);
     }
 

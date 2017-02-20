@@ -15,7 +15,11 @@ import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -64,9 +68,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void galleryIntent(View view)    {
-        Intent intent = new Intent();
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
 
     }
@@ -74,18 +77,40 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
             Intent open_displayPage = new Intent(this,showPreview.class);
-
-            open_displayPage.putExtra("code",0);
             open_displayPage.putExtra("imagePath",photoFileUri.toString());
-
             startActivity(open_displayPage);
         }
         else if(requestCode == SELECT_FILE && resultCode == RESULT_OK){
+
+            File imagefile = null;
+            InputStream inputStream;
+            OutputStream outputStream;
+            try {
+                 imagefile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                inputStream = getApplicationContext().getContentResolver().openInputStream(data.getData());
+                outputStream = new FileOutputStream(imagefile);
+
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while((bytesRead = inputStream.read(buffer))!=-1){
+                    outputStream.write(buffer,0,bytesRead);
+                }
+                inputStream.close();
+                outputStream.flush();
+                outputStream.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            photoFileUri = Uri.fromFile(imagefile);
             Intent open_displayPage = new Intent(this,showPreview.class);
-
-            open_displayPage.putExtra("code",1);
-            open_displayPage.putExtra("imagePath", data.getData().toString());
-
+            open_displayPage.putExtra("imagePath", photoFileUri.toString());
             startActivity(open_displayPage);
         }
     }
