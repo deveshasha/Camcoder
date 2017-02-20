@@ -28,5 +28,18 @@
         android:layout_width="wrap_content"
         android:onClick="uploadFunc" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/capturePhotoImageView"
+        android:layout_toRightOf="@+id/uploadBtn"
+        android:layout_toEndOf="@+id/uploadBtn"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="14dp"
+        android:id="@+id/textView"
+        android:textColor="@android:color/black" />
+
 
 </RelativeLayout>
