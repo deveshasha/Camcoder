@@ -8,30 +8,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#fff"
+    android:background="@color/view_background"
     tools:context=".MainActivity">
 
-    <Button
-        android:text="Choose from Gallery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/capture_image"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
-        android:id="@+id/view_gallery"
-        style="@android:style/Widget.Holo.Light.Button"
-        android:fontFamily="sans-serif-medium"
-        android:onClick="galleryIntent" />
-
-    <Button
-        android:text="Capture Image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
-        android:id="@+id/button4"
-        android:layout_alignParentTop="true"
-        android:fontFamily="sans-serif-medium"
-        style="@android:style/Widget.Holo.Light.Button" />
 
     <Button
         android:text="Capture Image"
@@ -39,9 +18,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="45dp"
         android:id="@+id/capture_image"
+        android:background="@color/btn_bg"
         android:layout_alignParentTop="true"
         android:fontFamily="sans-serif-medium"
         style="@android:style/Widget.Holo.Light.Button"
         android:onClick="takePhotoIntent" />
+
+    <Button
+        android:text="Choose from Gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:background="@color/btn_bg"
+        android:id="@+id/view_gallery"
+        style="@android:style/Widget.Holo.Light.Button"
+        android:fontFamily="sans-serif-medium"
+        android:onClick="galleryIntent"
+        android:layout_below="@+id/capture_image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
