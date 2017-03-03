@@ -119,7 +119,7 @@ public class showPreview extends Activity {
             String responseString;
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://192.168.0.104/camcoder/upload.php");
+            HttpPost httppost = new HttpPost("http://192.168.43.151/camcoder/upload.php");
 
             try{
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
@@ -160,15 +160,15 @@ public class showPreview extends Activity {
            // Log.e(TAG, "Response from server: " + result);
 
             // showing the server response in an alert dialog
-            showAlert();
+            showAlert(result);
             process_button.setVisibility(View.VISIBLE);
             super.onPostExecute(result);
         }
     }
 
-    private void showAlert() {
+    private void showAlert(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Successfully Uploaded")
+        builder.setMessage(message).setTitle("Successfully Uploaded")
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
