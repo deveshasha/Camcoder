@@ -1,8 +1,8 @@
 package com.beproj.camcoder;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,29 +10,24 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class showPreview extends Activity {
@@ -43,19 +38,19 @@ public class showPreview extends Activity {
     private Bitmap bitmap;
     Uri imageuri;
     long totalSize = 0;
-    private Button process_button;
     private ProgressBar progressBar;
-    private TextView txtPercentage;
+    //private TextView txtPercentage;
 
+    private Context mContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_preview);
-        process_button = (Button) findViewById(R.id.process);
+       // process_button = (Button) findViewById(R.id.process);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        txtPercentage = (TextView) findViewById(R.id.textView);
+        //txtPercentage = (TextView) findViewById(R.id.textView);
         mPhotoCapturedImageView = (ImageView) findViewById(R.id.capturePhotoImageView);
         code = getIntent().getIntExtra("code", -1);
         imageuri = Uri.parse(getIntent().getStringExtra("imagePath"));
@@ -88,6 +83,16 @@ public class showPreview extends Activity {
     }
 
     private class UploadFileToServer extends AsyncTask<Void, Integer, String> {
+
+        private final int UPLOADING_PHOTO  = 0;
+        private final int SERVER_PROCESSING  = 1;
+        private ProgressDialog dialog;
+
+        public UploadFileToServer(){
+            dialog = new ProgressDialog(mContext);
+        }
+
+
         @Override
         protected void onPreExecute() {
             // setting progress bar to zero
@@ -98,30 +103,41 @@ public class showPreview extends Activity {
         @Override
         protected void onProgressUpdate(Integer... progress) {
             // Making progress bar visible
-            progressBar.setVisibility(View.VISIBLE);
+/*            progressBar.setVisibility(View.VISIBLE);
+            if(progress[0] == UPLOADING_PHOTO) {
+                // updating progress bar value
+                progressBar.setProgress(progress[0]);
+                // updating percentage value
+                txtPercentage.setText(new StringBuilder().append(String.valueOf(progress[0])).append("%").toString());
+            }else if (progress[0] == SERVER_PROCESSING){
 
-            // updating progress bar value
-            progressBar.setProgress(progress[0]);
-
-            // updating percentage value
-            txtPercentage.setText(new StringBuilder().append(String.valueOf(progress[0])).append("%").toString());
+            }*/
+            if(progress[0] == UPLOADING_PHOTO){
+                dialog.setMessage("Uploading");
+                dialog.show();
+            }
+            else if (progress[0] == SERVER_PROCESSING){
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                dialog.setMessage("Processing");
+                dialog.show();
+            }
         }
-
 
         @Override
         protected String doInBackground(Void... voids) {
-            return uploadFile();
+            //performProcessing();
+            uploadFile();
+            return null;
         }
 
         @SuppressWarnings("deprecation")
-        private String uploadFile() {
-
-            String responseString;
-
+        private void uploadFile() {
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://192.168.43.151/camcoder/upload.php");
+            HttpPost httppost = new HttpPost("http://deveshasha.pythonanywhere.com/upload");
 
-            try{
+            try {
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
                         new AndroidMultiPartEntity.ProgressListener() {
 
@@ -130,6 +146,7 @@ public class showPreview extends Activity {
                                 publishProgress((int) ((num / (float) totalSize) * 100));
                             }
                         });
+                publishProgress(UPLOADING_PHOTO);
                 File sourceFile = new File(path);
                 entity.addPart("image", new FileBody(sourceFile));
                 totalSize = entity.getContentLength();
@@ -137,36 +154,64 @@ public class showPreview extends Activity {
 
                 // Making server call
                 HttpResponse response = httpclient.execute(httppost);
-                HttpEntity r_entity = response.getEntity();
+
+                //HttpEntity r_entity = response.getEntity();
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
                     // Server response
-                    responseString = EntityUtils.toString(r_entity);
-                } else {
-                    responseString = "Error occurred! Http Status Code: "
-                            + statusCode;
+                    publishProgress(SERVER_PROCESSING);
+                    InputStream is = response.getEntity().getContent();
+                    String code = getCodeFromImage(is);
+                    Intent intent = new Intent(showPreview.this, adjust.class);
+                    intent.putExtra("code", code);
+                    startActivity(intent);
                 }
-            }catch (ClientProtocolException e) {
-                responseString = e.toString();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
             } catch (IOException e) {
-                responseString = e.toString();
+                e.printStackTrace();
+            }
+        }
+
+        private String getCodeFromImage(InputStream is) {
+            BufferedReader br = null;
+            StringBuilder sb = new StringBuilder();
+            String line;
+            try {
+                br = new BufferedReader(new InputStreamReader(is));
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                    sb.append("\n\r");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
-            return responseString;
+            return sb.toString();
         }
 
         @Override
         protected void onPostExecute(String result) {
            // Log.e(TAG, "Response from server: " + result);
-
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
             // showing the server response in an alert dialog
-            showAlert(result);
-            process_button.setVisibility(View.VISIBLE);
+            //showAlert(result);
+            //process_button.setVisibility(View.VISIBLE);
             super.onPostExecute(result);
         }
     }
 
-    private void showAlert(String message) {
+/*    private void showAlert(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message).setTitle("Successfully Uploaded")
                 .setCancelable(false)
@@ -177,8 +222,7 @@ public class showPreview extends Activity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-    }
-
+    }*/
     public String getfilename(Uri uri){
         if (uri.getScheme().equals("file")) {
             image_name = uri.getLastPathSegment();

@@ -15,7 +15,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/uploadBtn"
+        android:layout_above="@+id/processBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="12dp"
         android:id="@+id/progressBar" />
@@ -40,27 +40,14 @@
 
     <Button
         android:text="Process"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/btn_bg"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:id="@+id/process"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:visibility="gone"/>
-
-    <Button
-        android:text="Upload"
-        android:layout_height="wrap_content"
-        android:id="@+id/uploadBtn"
+        android:id="@+id/processBtn"
         android:background="@color/btn_bg"
         android:layout_width="wrap_content"
         android:onClick="uploadFunc"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/textView"
-        android:layout_toStartOf="@+id/textView" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp" />
 
 
 </RelativeLayout>
