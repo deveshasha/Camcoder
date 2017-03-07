@@ -32,6 +32,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 public class adjust extends AppCompatActivity {
 
@@ -48,7 +49,7 @@ public class adjust extends AppCompatActivity {
         Intent intent = getIntent();
         String codes = intent.getStringExtra("code");
         image_name = intent.getStringExtra("image_name");
-        Log.d(TAG,image_name);
+        //Log.d(TAG,image_name);
         mCodeText = (EditText) findViewById(R.id.editText);
         mCodeText.setText(codes, TextView.BufferType.EDITABLE);
 
@@ -73,8 +74,9 @@ public class adjust extends AppCompatActivity {
         @Override
         protected String doInBackground(String... param) {
             String code = param[0];
-            Log.d(TAG,code);
-            return uploadCode(code);
+            //Log.d(TAG,code);
+            uploadCode(code);
+            return null;
 
         }
 
@@ -84,10 +86,10 @@ public class adjust extends AppCompatActivity {
 
 
         @SuppressWarnings("deprecation")
-        private String uploadCode(String code) {
-            String responseString;
+        private void uploadCode(String code) {
+            //String responseString;
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://192.168.0.102/camcoder/runcode.php");
+            HttpPost httppost = new HttpPost("http://192.168.43.253:8000/run/");
 
             try {
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
@@ -99,40 +101,39 @@ public class adjust extends AppCompatActivity {
                             }
                         });
                 publishProgress(UPLOADING_CODE);
-                File filename = writeFile(code);
+                //File filename = writeFile(code);
                // File sourceFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Camcoder");
-                entity.addPart("code", new FileBody(filename));
+                entity.addPart("code", new StringBody(code));
                 totalSize = entity.getContentLength();
                 httppost.setEntity(entity);
 
                 // Making server call
                 HttpResponse response = httpclient.execute(httppost);
 
-                HttpEntity r_entity = response.getEntity();
+                //HttpEntity r_entity = response.getEntity();
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
                     // Server response
-                    responseString = EntityUtils.toString(r_entity);
-/*                    publishProgress(SERVER_PROCESSING);
+                    //responseString = EntityUtils.toString(r_entity);
+                    /*publishProgress(SERVER_PROCESSING);
                     InputStream is = response.getEntity().getContent();
                     String output = getFinalOutput(is);
                     Intent intent = new Intent(adjust.this, adjust.class);
                     intent.putExtra("output", output);
                     startActivity(intent);*/
+                    Log.d(TAG,code);
                 }
-                else{
-                    responseString = "Error occurred! Http Status Code: "
-                            + statusCode;
-                }
-            }catch (ClientProtocolException e) {
-                responseString = e.toString();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
             } catch (IOException e) {
-                responseString = e.toString();
+                e.printStackTrace();
             }
 
-            return responseString;
+            //return responseString;
         }
-        public File writeFile(String mValue) {
+/*        public File writeFile(String mValue) {
 
             try {
                 File filename = new File(Environment.getExternalStorageDirectory()
@@ -145,7 +146,7 @@ public class adjust extends AppCompatActivity {
             }
 
             return null;
-        }
+        }*/
 
 /*        private String getFinalOutput(InputStream is) {
             BufferedReader br = null;
@@ -191,12 +192,12 @@ public class adjust extends AppCompatActivity {
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
-            showAlert(result);
+            //showAlert(result);
             //super.onPostExecute(result);
         }
 
     }
-    private void showAlert(String message) {
+/*    private void showAlert(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message).setTitle("Successfully Uploaded")
                 .setCancelable(false)
@@ -207,5 +208,5 @@ public class adjust extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-    }
+    }*/
 }
