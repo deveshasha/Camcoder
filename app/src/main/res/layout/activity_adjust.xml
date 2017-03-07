@@ -33,6 +33,7 @@
         android:background="@color/btn_bg"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/runbtn" />
+        android:id="@+id/runbtn"
+        android:onClick="runCode" />
     />
 </RelativeLayout>

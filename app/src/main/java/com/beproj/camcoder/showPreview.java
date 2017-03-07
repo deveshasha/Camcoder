@@ -127,7 +127,7 @@ public class showPreview extends Activity {
 
         @Override
         protected String doInBackground(Void... voids) {
-            //performProcessing();
+            /* performProcessing(); */
             uploadFile();
             return null;
         }
@@ -135,7 +135,7 @@ public class showPreview extends Activity {
         @SuppressWarnings("deprecation")
         private void uploadFile() {
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://deveshasha.pythonanywhere.com/upload");
+            HttpPost httppost = new HttpPost("http://192.168.0.102/camcoder/upload.php");
 
             try {
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
@@ -164,6 +164,7 @@ public class showPreview extends Activity {
                     String code = getCodeFromImage(is);
                     Intent intent = new Intent(showPreview.this, adjust.class);
                     intent.putExtra("code", code);
+                    intent.putExtra("image_name",image_name);
                     startActivity(intent);
                 }
             } catch (ClientProtocolException e) {
