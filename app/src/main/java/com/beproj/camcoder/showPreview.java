@@ -135,7 +135,7 @@ public class showPreview extends Activity {
         @SuppressWarnings("deprecation")
         private void uploadFile() {
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://192.168.43.253:8000/upload/");
+            HttpPost httppost = new HttpPost("http://192.168.43.151:8000/upload/");
 
             try {
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(

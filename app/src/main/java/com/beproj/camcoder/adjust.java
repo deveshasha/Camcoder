@@ -89,7 +89,7 @@ public class adjust extends AppCompatActivity {
         private void uploadCode(String code) {
             //String responseString;
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://192.168.43.253:8000/run/");
+            HttpPost httppost = new HttpPost("http://192.168.43.151:8000/run/");
 
             try {
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
@@ -110,18 +110,19 @@ public class adjust extends AppCompatActivity {
                 // Making server call
                 HttpResponse response = httpclient.execute(httppost);
 
-                //HttpEntity r_entity = response.getEntity();
+                HttpEntity r_entity = response.getEntity();
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
                     // Server response
-                    //responseString = EntityUtils.toString(r_entity);
+                    String output = EntityUtils.toString(r_entity);
+                    Log.d(TAG,output);
                     /*publishProgress(SERVER_PROCESSING);
                     InputStream is = response.getEntity().getContent();
-                    String output = getFinalOutput(is);
-                    Intent intent = new Intent(adjust.this, adjust.class);
+                    String output = getFinalOutput(is);*/
+                    Intent intent = new Intent(adjust.this, Result.class);
                     intent.putExtra("output", output);
-                    startActivity(intent);*/
-                    Log.d(TAG,code);
+                    startActivity(intent);
+                    //Log.d(TAG,code);
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

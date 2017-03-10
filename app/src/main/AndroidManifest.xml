@@ -32,7 +32,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".showPreview" />
-        <activity android:name=".adjust"></activity>
+        <activity android:name=".adjust" />
+        <activity android:name=".Result"></activity>
     </application>
 
 </manifest>
