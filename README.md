@@ -51,3 +51,6 @@ is rotated accordingly in the opposite direction.</br>
 
 Code for above steps is available [here](https://github.com/deveshasha/Camcoder_server/blob/master/upload/views.py) under 
 ```preprocess_image``` function.
+
+## Processing
+Processing of the images was carried out by using [Tesseract OCR](https://github.com/tesseract-ocr/tesseract). Images of handwritten code were used for training Tesseract.
