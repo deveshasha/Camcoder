@@ -14,7 +14,7 @@ click an image which includes backgrounds such as surfaces of tables, which may 
 unnecessary noise and thus hamper overall efficiency of the system. Border detection helps to
 extract the region of interest. The algorithm finds all the continuous contours in the image. The
 largest contour from this is chosen, which is the page border. As all the required text will be
-written inside the page we can be sure that the largest continuous contour is our page border.
+written inside the page we can be sure that the largest continuous contour is our page border.</br>
 <img src="https://i.imgur.com/WmUnFZq.jpg"  alt = "Border Detection" width = "600"/>
 
 ### 2. Rotation for inclined contours
@@ -23,7 +23,7 @@ fitted by finding the 4 corner points on the contour. The side of this contour-b
 may be at an angle with the horizontal. Using such an image for text recognition will give
 ambiguous results. Thus if there is an inclination in the detected contour the image is straightened
 before further processing. The angle of the contour with the horizontal is calculated and then the
-image is rotated accordingly in the opposite direction.
+image is rotated accordingly in the opposite direction.</br>
 <img src="https://i.imgur.com/Luvjfgc.jpg"  alt = "Minimum bounding rectangle" width = "600"/>
 <img src="https://i.imgur.com/sbxy0Hv.jpg"  alt = "Rotated minimum bounding rectangle" width = "600"/>
 
