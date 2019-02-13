@@ -71,4 +71,5 @@ Below images illustrate the output of post-processing the stage:</br>
 <img src="https://i.imgur.com/gmMoa6Z.jpg"   width = "600"/>
 
 ## Screenshots from the app
-<img src="https://i.imgur.com/mnECFtV.jpg"   width = "600"/>
+<img src="https://i.imgur.com/mnECFtV.jpg"   width = "600"/></br>
+<img src="https://i.imgur.com/sLp0gil.jpg"   width = "600"/>
