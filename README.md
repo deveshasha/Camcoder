@@ -1,6 +1,6 @@
 # Camcoder
 An Android application that lets you take an image of handwritten code and execute it.</br>
-(Backend for the application : https://github.com/deveshasha/Camcoder_server)
+(Backend for the application : [Camcoder_server](https://github.com/deveshasha/Camcoder_server))
 
 ## Execution stages
 The application follows client-server architecture.
